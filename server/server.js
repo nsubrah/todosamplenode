@@ -24,6 +24,21 @@ todo.save().then((doc) => {
 });
 });
 
+app.get('/todos',(req,res) => {
+
+  Todo.find({}).then((todo) => {
+if(todo)
+  res.status(200).send(todo);
+  else {
+    res.status(404).send();
+  }
+
+}, (e) => {
+res.status(400).send();
+});
+
+});
+
 app.get('/todos/:id',(req,res) => {
   var id = req.params.id;
   if(!ObjectID.isValid(id))
@@ -42,4 +57,20 @@ res.status(400).send();
 
 });
 
-//newTodo.save().then((doc) => {console.log('Doc Saved',doc)}, (e) => {console.log('Unable to save',e)});
+app.delete('/todos/:id',(req,res) => {
+  var id = req.params.id;
+  if(!ObjectID.isValid(id))
+  res.status(404).send('Id is Invalid');
+
+  Todo.findByIdAndRemove(id).then((todo) => {
+if(todo)
+  res.status(200).send(todo);
+  else {
+    res.status(404).send();
+  }
+
+}, (e) => {
+res.status(400).send();
+});
+
+});
